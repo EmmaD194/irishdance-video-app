@@ -1,0 +1,79 @@
+{% extends "danceapp/layout.html" %}
+{% load static %}
+
+{% block title %}New Video {% endblock %}
+
+{% block body %}
+
+    <h2 class="text-center title pt-3">New Video</h2>
+
+    <div class="row justify-content-center">
+        <div class="form-group col-sm-10 col-md-8 col-lg-5">
+            <label for="videoInputLink">YouTube URL:</label>
+            <input class="form-control" type="text" id="videoInputLink">
+            <small id="passwordHelpBlock" class="form-text text-muted">
+                Make sure to copy and paste the URL directly from YouTube.
+            </small>
+            <div class="text-center">
+                <button class="btn btn-primary mt-3 btn-block" id="add-new-video">Load video</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="form-group col-sm-10 col-md-8 col-lg-5 d-none" id="newVideoForm">
+            <form action="{% url 'new_video' %}" method="POST" id="video_form">
+                {% csrf_token %}
+
+                {% for field in form %}
+                    {% if field.name == 'calena_steps' %}
+                    <div id="steps-container" class="d-none mb-2">
+
+                        <div class="form-group mb-0" id="steps">
+                            {{ field.label_tag }}
+                            <ul class="d-flex flex-wrap mb-0" id="all-steps">
+                                {% for pk, choice in field.field.widget.choices %}
+                                <li class="pr-3 pb-2">
+                                    <label for="id_{{field.name}}_{{ forloop.counter0 }}">
+                                    <input id="id_{{field.name}}_{{ forloop.counter0 }}" name="{{field.name}}" type="checkbox" value="{{pk}}" />
+                                    {{ choice }}
+                                    </label>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div id="steps-error" class="mb-3 text-danger"></div>
+                        <a class="btn btn-pink mb-2" id="add-new-step-button">Add new step</a>                        
+
+                    </div>
+                    
+                    {% else %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {{ field }}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+
+                <button type="submit" class="btn btn-primary">Add video</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mx-2 mx-sm-0 d-none" id="error_container">
+        <div class="alert alert-danger mt-4 pt-4 pb-3 col-sm-10 col-md-8 col-lg-5">
+            <h5 class="alert-heading">Oops!</h5>
+            <p id="error_message"></p>
+        </div>
+    </div>
+    
+
+{% endblock %}
+
+{% block script %}
+<script>
+    let YOUTUBE_API_KEY ='{{ YOUTUBE_API_KEY }}';
+</script>
+<script src="{% static 'danceapp/js/newvideo.js' %}" async></script>
+<script src="{% static 'danceapp/js/calena_step.js' %}" async></script>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% load static %}
+{% load humanize %}
+
+<!-- USED IN LAYOUT AND NOTIFICATION PAGE -->
+
+<div class="all-notifications">
+                                
+    {% for notification in notifications %}
+        <a data-notification_id="{{notification.pk}}" href="javascript:void(0)" data-video_id="{{notification.video.pk}}" class="notification-item px-3 d-flex border-bottom {% if notification.read != True %}unread{% endif %}">
+            <img class="circular-picture align-self-center" src="{% if notification.author.profile_picture %}{{notification.author.profile_picture}}{%else%}{% static 'danceapp/images/no-profile-pic.png' %}{%endif%}" alt="profile pic">
+            <div class="d-flex flex-column pl-3 justify-content-center">
+                <div class="notification-text">{{ notification.message }}</div>
+                <div class="notification-time text-muted font-weight-light">{{ notification.time|naturaltime }}</div>
+            </div>
+        </a>
+    {% empty %}
+        <div class="notification-item d-flex p-3">
+            <div class="py-2">You do not have any notifications.</div>
+        </div>
+    {% endfor %}
+</div>
