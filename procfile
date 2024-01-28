@@ -1,1 +1,1 @@
-gunicorn irishdance-video-app.wsgi
+web: lein run -m demo.web $PORT
